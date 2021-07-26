@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EloiMusk/Beer-Counter/issues"
   },
-  "homepage": "https://github.com/EloiMusk/Beer-Counter#readme"
+  "homepage": "https://github.com/EloiMusk/Beer-Counter#readme",
+  "dependencies": {
+    "@types/node": "^16.4.3"
+  }
 }

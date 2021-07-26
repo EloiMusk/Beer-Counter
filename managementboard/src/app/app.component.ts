@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+// @ts-ignore
+import { NFC } from 'nfc-pcsc';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'managementboard';
+  nfc = new NFC
+
 }
