@@ -1,5 +1,9 @@
 import flask
+from nfcUtil import nfcUtil
+from dbUtil import dbUtil
 
+db = dbUtil('./../db/beerCounter.db')
+nfc = nfcUtil()
 app = flask.Flask(__name__)
 app.config["DEBUG"] = 1
 
@@ -11,7 +15,8 @@ def home():
 
 @app.route('/get_uid', methods=['GET'])
 def get_uid():
-    uid = "Get uid here"
+    uid = nfc.get_uid()
+    print(uid)
     return uid
 
 @app.route('/set_display', methods=['POST'])
