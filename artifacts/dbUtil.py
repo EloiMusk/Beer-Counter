@@ -1,12 +1,12 @@
 import sqlite3
-import sys
+
 
 class dbUtil:
-    
+
     def __init__(self, db):
         self.con = sqlite3.connect(db)
         self.cur = self.con.cursor()
-    
+
     def setup_beerCounter(self):
         try:
             self.cur.execute('''CREATE TABLE persons
@@ -18,14 +18,35 @@ class dbUtil:
             self.con.commit()
         except:
             return False
-    
+
     def add_user(self, user):
         try:
             self.cur.execute('''INSERT INTO persons VALUES
-                             (?, ?, ?, ?, ?)''', (user.name, user.avatar, user.uid, user.password, user.role))
+                             (NULL ,?, ?, ?, ?, ?)''', (user.name, user.avatar, user.uid, user.password, user.role))
             self.con.commit()
         except:
-            raise
             return False
 
-        
+    def del_user(self, name):
+        try:
+            self.cur.execute('''select id from persons where name = ?''', [name])
+            id = self.cur.fetchone()[0]
+            self.cur.execute('''DELETE FROM persons WHERE name = ?''', [name])
+            self.cur.execute('''DELETE FROM logs WHERE person_id = ?''', [id])
+            self.con.commit()
+        except:
+            return False
+    def user_exists(self, name):
+        try:
+            self.cur.execute('''select name from persons where name = ?''', [name])
+            req = self.cur.fetchone()[0]
+            print(req)
+            if req == name:
+                print(True)
+                return True
+            else:
+                print(False)
+                return False
+        except:
+            return False
+
