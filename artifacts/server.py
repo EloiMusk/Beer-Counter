@@ -22,7 +22,24 @@ def get_uid():
 @app.route('/set_display', methods=['POST'])
 def set_display(text):
     state = False
-    # Set display to text and set state true if succeeded
+    #TODO Set display to text and set state true if succeeded
     return state
+
+@app.route('/create_user', methods=['POST'])
+def create_user(json):
+    #TODO: Create User
+    return True
+
+@app.route('/add_log', method=['POST'])
+def add_log(json):
+    #TODO: Add Log
+    return True
+
+@app.route('/add_beverage', method=['POST'])
+def add_beverage(json):
+    #TODO: Add Beverage
+    return True
+
+
 
 app.run()
