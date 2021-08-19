@@ -1,9 +1,12 @@
+from random import random
 import flask
-from nfcUtil import nfcUtil
+# from nfcUtil import nfcUtil
+from flask import request, jsonify
+import dataObjects
 from dbUtil import dbUtil
 
 db = dbUtil('./../db/beerCounter.db')
-nfc = nfcUtil()
+# nfc = nfcUtil()
 app = flask.Flask(__name__)
 app.config["DEBUG"] = 1
 
@@ -15,31 +18,68 @@ def home():
 
 @app.route('/get_uid', methods=['GET'])
 def get_uid():
-    uid = nfc.get_uid()
-    print(uid)
-    return uid
+    # uid = nfc.get_uid()
+    uid = int(random()*1000000)
+    # print(uid)
+    return jsonify(uid)
+
 
 @app.route('/set_display', methods=['POST'])
-def set_display(text):
-    state = False
-    #TODO Set display to text and set state true if succeeded
-    return state
+def set_display():
+    state = "False"
+    print(request.json)
+    # TODO Set display to text and set state true if succeeded
+    return jsonify(request.json)
+
 
 @app.route('/create_user', methods=['POST'])
-def create_user(json):
-    #TODO: Create User
-    return True
+def create_user():
+    msg = "Something went wrong."
+    user = dataObjects.user(**request.json)
+    try:
+        if not db.user_exists(user.name) and not user.name is None:
+            db.add_user(user)
+            state = "True"
+            return jsonify(state=state)
+        else:
+            state = "False"
+            msg = "User already exists."
+            return jsonify(state=state, msg=msg)
+    except:
+        state = "False"
+        return jsonify(state=state, msg=msg)
 
-@app.route('/add_log', method=['POST'])
-def add_log(json):
-    #TODO: Add Log
-    return True
 
-@app.route('/add_beverage', method=['POST'])
-def add_beverage(json):
-    #TODO: Add Beverage
-    return True
 
+@app.route('/add_log', methods=['POST'])
+def add_log():
+    msg = "Something went wrong."
+    log = dataObjects.log(**request.json)
+    try:
+        db.add_log(log)
+        state = "True"
+        return jsonify(state=state)
+    except:
+        state = "False"
+        return jsonify(state=state, msg=msg)
+
+
+@app.route('/add_beverage', methods=['POST'])
+def add_beverage():
+    msg = "Something went wrong."
+    beverage = dataObjects.beverage(**request.json)
+    try:
+        if not db.beverage_exists(beverage.name) and not beverage.name is None:
+            db.add_beverage(beverage)
+            state = "True"
+            return jsonify(state=state)
+        else:
+            state = "False"
+            msg = "Beverage already exists."
+            return jsonify(state=state, msg=msg)
+    except:
+        state = "False"
+        return jsonify(state=state, msg=msg)
 
 
 app.run()
