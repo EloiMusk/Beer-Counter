@@ -49,7 +49,13 @@ def create_user():
         state = "False"
         return jsonify(state=state, msg=msg)
 
+@app.route('/delete_user', methods=['DELETE'])
+def delete_user():
+    return True
 
+@app.route('/get_user', methods=['GET'])
+def get_user():
+    return True
 
 @app.route('/add_log', methods=['POST'])
 def add_log():
@@ -63,6 +69,17 @@ def add_log():
         state = "False"
         return jsonify(state=state, msg=msg)
 
+@app.route('/del_log', methods=['POST'])
+def del_log():
+    return True
+
+@app.route('/get_log', methods=['GET'])
+def get_log():
+    return True
+
+@app.route('/get_logs', methods=['GET'])
+def get_logs():
+    return True
 
 @app.route('/add_beverage', methods=['POST'])
 def add_beverage():
