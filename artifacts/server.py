@@ -1,16 +1,17 @@
 from random import random
 import flask
-# from nfcUtil import nfcUtil
+# from nfcUtil import nfcUtil # (self-built-module)
 from flask import request, jsonify
 import dataObjects # (self-built-module)
 from dbUtil import dbUtil # (self-built-module)
 
-db = dbUtil('./../db/beerCounter.db')
-# nfc = nfcUtil()
-app = flask.Flask(__name__)
-app.config["DEBUG"] = 1
+db = dbUtil('./../db/beerCounter.db') # import & bind DB-File
+# nfc = nfcUtil() # bind "nfcUtil" class
+app = flask.Flask(__name__) 
+app.config["DEBUG"] = 1 # Set the Debug Property to 1 ("No Issues" / "OK")
 
 
+# GET-Method API-Endpoint
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Welcome to the beer-counter api.</h1> <p>I wonder how u got here...</p>"
