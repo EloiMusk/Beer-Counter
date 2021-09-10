@@ -2,8 +2,8 @@ from random import random
 import flask
 # from nfcUtil import nfcUtil
 from flask import request, jsonify
-import dataObjects
-from dbUtil import dbUtil
+import dataObjects # (self-built-module)
+from dbUtil import dbUtil # (self-built-module)
 
 db = dbUtil('./../db/beerCounter.db')
 # nfc = nfcUtil()
