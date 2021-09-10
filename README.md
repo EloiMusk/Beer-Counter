@@ -1,2 +1,3 @@
 # Beer-Counter
-Beercounter a nfc cards.
+Count your beers with a NFC-Scanner/Card. \
+Feel free to contribute ;)
