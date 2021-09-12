@@ -11,12 +11,12 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = 1 # // Set the Debug Property to 1 ("No Issues" / "OK")
 
 
-# // ~~> Default-GET-Method API-Endpoint
+# // ~~> Default-GET-Methode API-Endpoint
 @app.route('/', methods=['GET'])
 def home():
     return "<h1>Welcome to the beer-counter api.</h1> <p>I wonder how u got here...</p>"
 
-
+# // ~~> GET-UID-Methode API-Endpoint
 @app.route('/get_uid', methods=['GET'])
 def get_uid():
     # uid = nfc.get_uid()
@@ -24,7 +24,7 @@ def get_uid():
     # print(uid)
     return jsonify(uid)
 
-
+# // ~~> Set-Display-Methode API-Endpoint
 @app.route('/set_display', methods=['POST'])
 def set_display():
     state = "False"
@@ -32,7 +32,7 @@ def set_display():
     # TODO Set display to text and set state true if succeeded
     return jsonify(request.json)
 
-
+# // ~~> Create-User-Methode API-Endpoint
 @app.route('/create_user', methods=['POST'])
 def create_user():
     msg = "Something went wrong."
