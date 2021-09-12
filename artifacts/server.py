@@ -52,7 +52,20 @@ def create_user():
 
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():
-    return True
+    msg = "Something went wrong."
+    user = dataObjects.user(**request.json)
+    try:
+        if db.user_exists(user.name) and not user.name is None:
+            db.del_user(user.name)
+            state = "True"
+            return jsonify(state=state)
+        else:
+            state = "False"
+            msg = "User already not existent."
+            return jsonify(state=state, msg=msg)
+    except:
+        state = "False"
+        return jsonify(state=state, msg=msg)
 
 @app.route('/get_user', methods=['GET'])
 def get_user():
