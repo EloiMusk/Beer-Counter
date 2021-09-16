@@ -13,7 +13,17 @@ class user:
             if name == None:
                 ValueError(name)
 
-            if avatar == ''
+            if avatar == '':
+                ValueError(avatar)
+
+            if uid == None:
+                ValueError(uid)
+
+            if password == None:
+                ValueError(password)
+
+            if role == None:
+                ValueError(role)
 
 class beverage:
     
