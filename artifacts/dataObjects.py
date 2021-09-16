@@ -10,34 +10,95 @@ class user:
             self.role = role
 
         else:
+            ErrorParameter = []
+            ErrorString = "Initialisieren der Klasse 'user' nicht möglich ->"
+
             if name == None:
-                ValueError(name)
+                ErrorParameter += ['name']
 
             if avatar == '':
-                ValueError(avatar)
+                ErrorParameter += ['avatar']
 
             if uid == None:
-                ValueError(uid)
+                ErrorParameter += ['uid']
 
             if password == None:
-                ValueError(password)
+               ErrorParameter += ['uid']
 
             if role == None:
-                ValueError(role)
+                ErrorParameter += ['role']
+
+            ErrorString += ErrorParameter[0]
+
+            if not len(ErrorParameter) == 1:
+                for EP in ErrorParameter:
+                    ErrorString += str(',{}'.format(EP))
+                
+            ErrorString += "-parameter = None !"
+
+            raise Exception(ErrorString)
 
 class beverage:
     
     def __init__(self, name=None, alc=None, price=None):
-        self.name = name
-        self.alc = alc
-        self.price = price
+        if not name == None and not alc == None and not price == None:
+            self.name = name
+            self.alc = alc
+            self.price = price
+
+        else:
+            ErrorParameter = []
+            ErrorString = "Initialisieren der Klasse 'beverage' nicht möglich ->"
+
+            if name == None:
+                ErrorParameter += ['name']
+
+            if alc == None:
+                ErrorParameter += ['alc']
+
+            if price == None:
+                ErrorParameter += ['price']
+
+            ErrorString += ErrorParameter[0]
+
+            if not len(ErrorParameter) == 1:
+                for EP in ErrorParameter:
+                    ErrorString += str(',{}'.format(EP))
+                
+            ErrorString += "-parameter = None !"
+            
+            raise Exception(ErrorString)
 
 class log:
     
     def __init__(self, timestamp=None, person_id=None, beverage_id=None):
-        self.timestamp = timestamp
-        self.person_id = person_id
-        self.beverage_id = beverage_id
+        if not timestamp == None and not person_id == None and not beverage_id == None:
+            self.timestamp = timestamp
+            self.person_id = person_id
+            self.beverage_id = beverage_id
+
+        else:
+            ErrorParameter = []
+            ErrorString = "Initialisieren der Klasse 'log' nicht möglich ->"
+
+            if timestamp == None:
+                ErrorParameter += ['timestamp']
+
+            if person_id == None:
+                ErrorParameter += ['person_id']
+
+            if beverage_id == None:
+                ErrorParameter += ['beverage_id']
+
+            ErrorString += ErrorParameter[0]
+
+            if not len(ErrorParameter) == 1:
+                for EP in ErrorParameter:
+                    ErrorString += str(',{}'.format(EP))
+                
+            ErrorString += "-parameter = None !"
+            
+            raise Exception(ErrorString)
 
 """
 class nfcTag:
@@ -47,9 +108,22 @@ class nfcTag:
             self.person_id = person_id
 
         else:
+            ErrorParameter = []
+            ErrorString = "Initialisieren der Klasse 'nfcTag' nicht möglich ->"
+
             if uid == None:
-                ValueError(uid)
+                ErrorParameter += ['uid']
 
             if person_id == None:
-                ValueError(person_id)
+                ErrorParameter += ['person_id']
+
+            ErrorString += ErrorParameter[0]
+
+            if not len(ErrorParameter) == 1:
+                for EP in ErrorParameter:
+                    ErrorString += str(',{}'.format(EP))
+                
+            ErrorString += "-parameter = None !"
+            
+            raise Exception(ErrorString)
 """
