@@ -91,3 +91,31 @@ class beveragesDB:
             return True
         else:
             return False
+
+"""
+class nfcTagDB:
+    def __init__(self, db, table):
+        self.manager = dbManager(db)
+        self.tableName = table
+
+    def create(self):
+        headers = {
+            "id": ['INTEGER', 'PRIMARY', 'KEY'],
+            "uid": ['text'],
+            "person_id": ['integer']
+        }
+
+        return self.manager.createTable(self.tableName, headers)
+
+    def add(self, nfcTag):
+        return self.manager.insertInto(self.tableName, [nfcTag.uid, nfcTag.person_id])
+
+    def delete(self, id):
+        return self.manager.delete(self.tableName, 'id', id)
+
+    def exists(self, uid):
+        if uid == self.manager.select(self.tableName, 'uid', 'uid', uid):
+            return True
+        else:
+            return False
+"""
