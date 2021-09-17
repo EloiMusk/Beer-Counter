@@ -175,7 +175,23 @@ def add_nfcTag():
 
 @app.route('/delete_nfcTag', methods=['DELETE'])
 def delete_nfcTag():
-    return True
+    nfcTag = dataObjects.nfcTag(**request.json)
+    try:
+        if db.nfcTags.exists(nfcTag.uid) and not nfcTag.uid is None:
+            db.nfcTags.delete(nfcTag.uid)
+            state = "True"
+            msg = str(f"Successfully delete nfcTag {nfcTag.uid}")
+
+        else:
+            state = "False"
+            msg = str(f"NFC-Tag {nfcTag.uid} already not existent")
+            
+    except:
+        state = "False"
+        msg = "Something went wrong."
+
+    finally:
+        return jsonify(state=state, msg=msg)
 
 @app.route('/get_nfcTag', methods=['GET'])
 def get_nfcTag():
