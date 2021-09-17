@@ -102,7 +102,6 @@ class log:
             
             raise Exception(ErrorString)
 
-
 class nfcTag:
     def __init__(self, uid=None, person_id=None):
         if not uid == None and not person_id == None:
