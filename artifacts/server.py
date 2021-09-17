@@ -4,13 +4,11 @@ import flask
 # from nfcUtil import nfcUtil
 from flask import request, jsonify
 import dataObjects
-from dbUtil import personsDB, logsDB, beveragesDB
+from dbUtil import Database
 
-#db = dbUtil('./../db/beerCounter.db')
+
 # nfc = nfcUtil()
-persons = personsDB('./../db/beerCounter.db', 'persons')
-logs = logsDB('./../db/beerCounter.db', 'logs')
-beverages = beveragesDB('./../db/beerCounter.db', 'beverages')
+db = Database('./../db/beerCounter.db', ['persons', 'logs', 'beverages', 'nfcTags'])
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = 1
@@ -41,8 +39,8 @@ def set_display():
 def create_user():
     user = dataObjects.user(**request.json)
     try:
-        if not persons.exists(user.name) and not user.name is None:
-            persons.add(user)
+        if not db.persons.exists(user.name) and not user.name is None:
+            db.persons.add(user)
             state = "True"
             msg = str(f"Successfully created user {user.name}")
 
@@ -62,9 +60,9 @@ def delete_user():
     user = dataObjects.user(**request.json)
 
     try:
-        if persons.exists(user.name) and not user.name is None:
+        if db.persons.exists(user.name) and not user.name is None:
 
-            persons.delete(user.name)
+            db.persons.delete(user.name)
             state = "True"
             msg = str(f"Successfully removed user {user.name}")
 
@@ -87,7 +85,7 @@ def get_user():
 def add_log():
     log = dataObjects.log(**request.json)
     try:
-        logs.add(log)
+        db.logs.add(log)
         state = "True"
         return jsonify(state=state)
     except:
@@ -95,11 +93,11 @@ def add_log():
         msg = "Something went wrong."
         return jsonify(state=state, msg=msg)
 
-@app.route('/del_log', methods=['POST'])
-def del_log():
+@app.route('/delete_log', methods=['POST'])
+def delete_log():
     log = dataObjects.log(**request.json)
     try:
-        logs.delete(log.id)
+        db.logs.delete(log.id)
         state = "True"
         return jsonify(state=state)
     except:
@@ -119,8 +117,8 @@ def get_logs():
 def add_beverage():
     beverage = dataObjects.beverage(**request.json)
     try:
-        if not beverages.exists(beverage.name) and not beverage.name is None:
-            beverages.add(beverage)
+        if not db.beverages.exists(beverage.name) and not beverage.name is None:
+            db.beverages.add(beverage)
             state = "True"
             msg = str(f"Successfully added beverage {beverage.name}")
 
@@ -139,8 +137,8 @@ def add_beverage():
 def delete_beverage():
     beverage = dataObjects.beverage(**request.json)
     try:
-        if beverages.exists(beverage.name) and not beverage.name is None:
-            beverages.delete(beverage.name)
+        if db.beverages.exists(beverage.name) and not beverage.name is None:
+            db.beverages.delete(beverage.name)
             state = "True"
             msg = str(f"Successfully delete beverage {beverage.name}")
 
@@ -154,5 +152,17 @@ def delete_beverage():
 
     finally:
         return jsonify(state=state, msg=msg)
+
+@app.route('/add_nfcTag', methods=['POST'])
+def add_nfcTag():
+    return True
+
+@app.route('/delete_nfcTag', methods=['DELETE'])
+def delete_nfcTag():
+    return True
+
+@app.route('/get_nfcTag', methods=['GET'])
+def get_nfcTag():
+    return True
 
 app.run()
