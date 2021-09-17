@@ -1,3 +1,6 @@
+from activityLogger import activityLogger
+
+Logger = activityLogger()
 
 class user:
     
@@ -38,7 +41,7 @@ class user:
                 
             ErrorString += "-parameter = None !"
 
-            raise Exception(ErrorString)
+            Logger.log_error(ErrorString)
 
 class beverage:
     
@@ -69,7 +72,7 @@ class beverage:
                 
             ErrorString += "-parameter = None !"
             
-            raise Exception(ErrorString)
+            Logger.log_error(ErrorString)
 
 class log:
     
@@ -100,7 +103,7 @@ class log:
                 
             ErrorString += "-parameter = None !"
             
-            raise Exception(ErrorString)
+            Logger.log_error(ErrorString)
 
 class nfcTag:
     def __init__(self, uid=None, person_id=None):
@@ -126,4 +129,4 @@ class nfcTag:
                 
             ErrorString += "-parameter = None !"
             
-            raise Exception(ErrorString)
+            Logger.log_error(ErrorString)
