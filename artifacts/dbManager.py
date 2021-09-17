@@ -18,9 +18,15 @@ Ein "headersDict" sollte folgendermassen aussehen:
 """
 
 class dbManager:
+    """
+    Class to manage the Data-Base, without hardcoding inputs.
+    """
     def __init__(self, db):
-        self.con = sqlite3.connect(db, check_same_thread=False)
-        self.cur = self.con.cursor()
+        try:
+            self.con = sqlite3.connect(db, check_same_thread=False)
+            self.cur = self.con.cursor()
+        except Exception:
+            raise Exception(str(f'Cannot initialize class "dbManager" of db: {db} !'))
 
     def createTable(self, tableName, headersDict):
         argsString = '('
@@ -43,6 +49,7 @@ class dbManager:
 
         except Exception:
             self.con.rollback()
+            print(str(f'Failed to create Table {tableName} - Error while executing SQL-Command!'))
             return False
 
     def insertInto(self, tableName, values):
@@ -57,8 +64,9 @@ class dbManager:
             self.cur.execute('''INSERT INTO {} VALUES {}'''.format(tableName, argsString), values)
             self.con.commit()
             return True
-        except:
+        except Exception:
             self.con.rollback()
+            print(str(f'Failed to insert Value: {values} in Table: {tableName}!'))
             return False
 
     def delete(self, tablename, filterBy, filterCriteria):
@@ -68,6 +76,7 @@ class dbManager:
             return True
         except Exception:
             self.con.rollback()
+            print(str(f'Failed to delete Entry where {filterBy} like {filterCriteria} in table: {tablename}!'))
             return False
 
     def select(self, tableName, getWhat, filterBy, filterCriteria):
@@ -77,4 +86,5 @@ class dbManager:
 
         except Exception:
             self.con.rollback()
+            print(str(f'Failed to get {filterBy} like {filterCriteria} in table: {tableName}!'))
             return None
