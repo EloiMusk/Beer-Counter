@@ -155,7 +155,23 @@ def delete_beverage():
 
 @app.route('/add_nfcTag', methods=['POST'])
 def add_nfcTag():
-    return True
+    nfcTag = dataObjects.nfcTag(**request.json)
+    try:
+        if not db.nfcTags.exists(nfcTag.uid) and not nfcTag.uid is None:
+            db.nfcTags.add(nfcTag)
+            state = "True"
+            msg = str(f"Successfully added nfcTag {nfcTag.uid} for person witdh ID: {nfcTag.person_id}")
+
+        else:
+            state = "False"
+            msg = str(f"Beverage {nfcTag.uid} already exists.")
+            
+    except:
+        state = "False"
+        msg = "Something went wrong."
+
+    finally:
+        return jsonify(state=state, msg=msg)
 
 @app.route('/delete_nfcTag', methods=['DELETE'])
 def delete_nfcTag():
