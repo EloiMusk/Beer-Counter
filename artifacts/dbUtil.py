@@ -1,106 +1,121 @@
-import sqlite3
+"""
+      .....
+  ...'     '... 
+ '..:.......:..' 
+     '.....'     
 
+By Slowloris-coding
+"""
 
-class dbUtil:
+from dbManager import dbManager
 
-    def __init__(self, db):
-        self.con = sqlite3.connect(db, check_same_thread=False)
-        self.cur = self.con.cursor()
+class personsDB:
+    def __init__(self, db, table):
+        self.manager = dbManager(db)
+        self.tableName = table
 
-    def setup_beerCounter(self):
+    def create(self):
+        headers = {
+            "id": ['INTEGER', 'PRIMARY', 'KEY', 'AUTOINCREMENT'],
+            'name': ['text'],
+            'avatar': ['text'],
+            'uid': ['text'],
+            'password': ['text'],
+            'role': ['integer']
+        }
+
+        return self.manager.createTable(self.tableName, headers)
+
+    def add(self, user):
+        return self.manager.insertInto(self.tableName, (user.name, user.avatar, user.uid, user.password, user.role))
+
+    def delete(self, name):
         try:
-            self.cur.execute('''CREATE TABLE persons
-                            (id INTEGER PRIMARY KEY AUTOINCREMENT, name text, avatar text, uid text, password text, role integer)''')
-            self.cur.execute('''CREATE TABLE beverages
-                            (id INTEGER PRIMARY KEY, name text, alc real, price real)''')
-            self.cur.execute('''CREATE TABLE logs
-                            (id INTEGER PRIMARY KEY, timestamp text, person_id integer, beverage_id integer)''')
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+            self.manager.delete('logs', 'person_id', self.manager.select(self.tableName, 'id', 'name', name))
+            self.manager.delete(self.tableName, 'name', name)
 
-    def add_user(self, user):
-        try:
-            self.cur.execute('''INSERT INTO persons VALUES
-                             (NULL ,?, ?, ?, ?, ?)''', (user.name, user.avatar, user.uid, user.password, user.role))
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+            return True
+        except Exception:
+            return False
 
-    def del_user(self, name):
-        try:
-            self.cur.execute('''select id from persons where name = ?''', [name])
-            id = self.cur.fetchone()[0]
-            self.cur.execute('''DELETE FROM persons WHERE name = ?''', [name])
-            self.cur.execute('''DELETE FROM logs WHERE person_id = ?''', [id])
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+    def exists(self, name):
+        if name == self.manager.select(self.tableName, 'name', 'name', name):
+            return True
+        else:
+            return False
 
-    def user_exists(self, name):
-        req = None
-        self.cur.execute('''select name from persons where name = ?''', [name])
-        try:
-            req = self.cur.fetchone()[0]
-        finally:
-            if req == name:
-                return True
-            else:
-                return False
+class logsDB:
+    def __init__(self, db, table):
+        self.manager = dbManager(db)
+        self.tableName = table
 
-    def add_log(self, log):
-        try:
-            self.cur.execute('''insert into logs values
-            (NULL, ?, ?, ?)''', [log.timestamp, log.person_id, log.beverage_id])
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+    def create(self):
+        headers = {
+            "id": ['INTEGER', 'PRIMARY', 'KEY'],
+            "timestamp": ['text'],
+            "person_id": ['integer'],
+            "beverage_id": ['integer']
+        }
 
-    def del_log(self, id):
-        try:
-            self.cur.execute('''DELETE FROM logs where id = ?''', [id])
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+        return self.manager.createTable(self.tableName, headers)
 
-    def add_beverage(self, beverage):
-        try:
-            self.cur.execute('''insert into beverages values
-            (NULL, ?, ?, ?)''', [beverage.name, beverage.alc, beverage.price])
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+    def add(self, log):
+        return self.manager.insertInto(self.tableName, [log.timestamp, log.person_id, log.beverage_id])
 
-    def beverage_exists(self, name):
-        req = None
-        self.cur.execute('''select name from beverages where name = ?''', [name])
-        try:
-            req = self.cur.fetchone()[0]
-        finally:
-            if req == name:
-                return True
-            else:
-                return False
+    def delete(self, id):
+        return self.manager.delete(self.tableName, 'id', id)
 
-    def del_beverage(self, id):
-        try:
-            self.cur.execute('''delete from beverage where id = ?''', [id])
-            self.con.commit()
-            return "True"
-        except:
-            self.con.rollback()
-            return "False"
+class beveragesDB:
+    def __init__(self, db, table):
+        self.manager = dbManager(db)
+        self.tableName = table
 
+    def create(self):
+        headers = {
+            "id": ['INTEGER', 'PRIMARY', 'KEY'],
+            "name": ['text'],
+            "alc": ['real'],
+            "price": ['real']
+        }
 
+        return self.manager.createTable(self.tableName, headers)
+
+    def add(self, beverage):
+        return self.manager.insertInto(self.tableName, [beverage.name, beverage.alc, beverage.price])
+
+    def delete(self, id):
+        return self.manager.delete(self.tableName, 'id', id)
+
+    def exists(self, name):
+        if name == self.manager.select(self.tableName, 'name', 'name', name):
+            return True
+        else:
+            return False
+
+"""
+class nfcTagDB:
+    def __init__(self, db, table):
+        self.manager = dbManager(db)
+        self.tableName = table
+
+    def create(self):
+        headers = {
+            "id": ['INTEGER', 'PRIMARY', 'KEY'],
+            "uid": ['text'],
+            "person_id": ['integer']
+        }
+
+        return self.manager.createTable(self.tableName, headers)
+
+    def add(self, nfcTag):
+        return self.manager.insertInto(self.tableName, [nfcTag.uid, nfcTag.person_id])
+
+    def delete(self, id):
+        return self.manager.delete(self.tableName, 'id', id)
+
+    def exists(self, uid):
+        if uid == self.manager.select(self.tableName, 'uid', 'uid', uid):
+            return True
+        else:
+            return False
+"""

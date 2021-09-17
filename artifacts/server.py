@@ -1,12 +1,17 @@
+from os import stat
 from random import random
 import flask
 # from nfcUtil import nfcUtil
 from flask import request, jsonify
 import dataObjects
-from dbUtil import dbUtil
+from dbUtil import personsDB, logsDB, beveragesDB
 
-db = dbUtil('./../db/beerCounter.db')
+#db = dbUtil('./../db/beerCounter.db')
 # nfc = nfcUtil()
+persons = personsDB('./../db/beerCounter.db', 'persons')
+logs = logsDB('./../db/beerCounter.db', 'logs')
+beverages = beveragesDB('./../db/beerCounter.db', 'beverages')
+
 app = flask.Flask(__name__)
 app.config["DEBUG"] = 1
 
@@ -34,24 +39,45 @@ def set_display():
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
-    msg = "Something went wrong."
     user = dataObjects.user(**request.json)
     try:
-        if not db.user_exists(user.name) and not user.name is None:
-            db.add_user(user)
+        if not persons.exists(user.name) and not user.name is None:
+            persons.add(user)
             state = "True"
-            return jsonify(state=state)
+            msg = str(f"Successfully created user {user.name}")
+
         else:
             state = "False"
-            msg = "User already exists."
-            return jsonify(state=state, msg=msg)
+            msg = str(f"User {user.name} already exists.")
+            
     except:
         state = "False"
+        msg = "Something went wrong."
+
+    finally:
         return jsonify(state=state, msg=msg)
 
 @app.route('/delete_user', methods=['DELETE'])
 def delete_user():
-    return True
+    user = dataObjects.user(**request.json)
+
+    try:
+        if persons.exists(user.name) and not user.name is None:
+
+            persons.delete(user.name)
+            state = "True"
+            msg = str(f"Successfully removed user {user.name}")
+
+        else:
+            state = "False"
+            msg = str(f"User {user.name} already not there.")
+
+    except Exception:
+        state = "False"
+        msg = "Something went wrong."
+
+    finally:
+        return jsonify(state=state, msg=msg)
 
 @app.route('/get_user', methods=['GET'])
 def get_user():
@@ -59,19 +85,27 @@ def get_user():
 
 @app.route('/add_log', methods=['POST'])
 def add_log():
-    msg = "Something went wrong."
     log = dataObjects.log(**request.json)
     try:
-        db.add_log(log)
+        logs.add(log)
         state = "True"
         return jsonify(state=state)
     except:
         state = "False"
+        msg = "Something went wrong."
         return jsonify(state=state, msg=msg)
 
 @app.route('/del_log', methods=['POST'])
 def del_log():
-    return True
+    log = dataObjects.log(**request.json)
+    try:
+        logs.delete(log.id)
+        state = "True"
+        return jsonify(state=state)
+    except:
+        state = "False"
+        msg = "Something went wrong."
+        return jsonify(state=state, msg=msg)
 
 @app.route('/get_log', methods=['GET'])
 def get_log():
@@ -83,20 +117,42 @@ def get_logs():
 
 @app.route('/add_beverage', methods=['POST'])
 def add_beverage():
-    msg = "Something went wrong."
     beverage = dataObjects.beverage(**request.json)
     try:
-        if not db.beverage_exists(beverage.name) and not beverage.name is None:
-            db.add_beverage(beverage)
+        if not beverages.exists(beverage.name) and not beverage.name is None:
+            beverages.add(beverage)
             state = "True"
-            return jsonify(state=state)
+            msg = str(f"Successfully added beverage {beverage.name}")
+
         else:
             state = "False"
-            msg = "Beverage already exists."
-            return jsonify(state=state, msg=msg)
+            msg = str(f"Beverage {beverage.name} already exists.")
+            
     except:
         state = "False"
+        msg = "Something went wrong."
+
+    finally:
         return jsonify(state=state, msg=msg)
 
+@app.route('/delete_beverage', methods=['DELETE'])
+def delete_beverage():
+    beverage = dataObjects.beverage(**request.json)
+    try:
+        if beverages.exists(beverage.name) and not beverage.name is None:
+            beverages.delete(beverage.name)
+            state = "True"
+            msg = str(f"Successfully delete beverage {beverage.name}")
+
+        else:
+            state = "False"
+            msg = str(f"Beverage {beverage.name} already not existent")
+            
+    except:
+        state = "False"
+        msg = "Something went wrong."
+
+    finally:
+        return jsonify(state=state, msg=msg)
 
 app.run()
